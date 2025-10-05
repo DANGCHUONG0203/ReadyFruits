@@ -1,0 +1,64 @@
+/* CSS cho trang đặt hàng thành công - tông màu cam */
+.container.my-4 {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.2); /* Bóng cam nhạt */
+    text-align: center;
+}
+
+/* Tiêu đề đặt hàng thành công */
+h2 {
+    color: #e67e22; /* Màu cam đậm */
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+/* Thông báo */
+p {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Nút trở về (nếu bạn muốn thêm sau) */
+.btn-return {
+    background-color: #e67e22; /* Cam chủ đạo */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-return:hover {
+    background-color: #d35400; /* Cam đậm hơn khi hover */
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .container.my-4 {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    .btn-return {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+}

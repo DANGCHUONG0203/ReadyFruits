@@ -1,0 +1,208 @@
+/* Pagination Component - Modern Design */
+.pagination-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+}
+
+.pagination-info {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.pagination-button {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  background-color: transparent;
+  color: #374151;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pagination-button:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.pagination-button.active {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  border-color: #ff6b35;
+  box-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
+}
+
+.pagination-button.active:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #e8851b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 107, 53, 0.4);
+}
+
+.pagination-nav {
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-width: 2.5rem;
+}
+
+.pagination-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+}
+
+.pagination-ellipsis {
+  padding: 0.5rem;
+  color: #9ca3af;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Quick Jump */
+.pagination-jump {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.page-jump-input {
+  width: 4rem;
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.page-jump-input:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pagination-wrapper {
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+
+  .pagination-container {
+    gap: 0.125rem;
+    padding: 0.25rem;
+  }
+
+  .pagination-button {
+    min-width: 2rem;
+    height: 2rem;
+    font-size: 0.8rem;
+  }
+
+  .pagination-nav {
+    font-size: 1rem;
+    min-width: 2rem;
+  }
+
+  .pagination-info {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .pagination-jump {
+    font-size: 0.8rem;
+  }
+
+  .page-jump-input {
+    width: 3rem;
+    height: 1.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination-jump {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.25rem;
+  }
+
+  /* Ẩn một số trang trên mobile để tiết kiệm không gian */
+  .pagination-button:not(.active):not(.pagination-nav):nth-child(n+6) {
+    display: none;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  .pagination-container {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .pagination-button {
+    color: #e5e7eb;
+  }
+
+  .pagination-button:hover {
+    background-color: #374151;
+    color: #f9fafb;
+  }
+
+  .pagination-info {
+    color: #9ca3af;
+  }
+
+  .pagination-ellipsis {
+    color: #6b7280;
+  }
+
+  .page-jump-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+
+  .pagination-jump {
+    color: #9ca3af;
+  }
+}

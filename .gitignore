@@ -1,0 +1,366 @@
+# Comprehensive .gitignore for Full-Stack React + Node.js Application
+
+# ===================================
+# NODE.JS & NPM
+# ===================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package lock files (keep only one, remove others based on package manager)
+# package-lock.json  # Uncomment if using yarn/pnpm
+# yarn.lock          # Uncomment if using npm/pnpm
+# pnpm-lock.yaml     # Uncomment if using npm/yarn
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+.nyc_output
+
+# ===================================
+# REACT & BUILD FILES
+# ===================================
+# Production builds
+build/
+dist/
+out/
+
+# Static files
+.next/
+.nuxt/
+.vuepress/dist
+
+# Storybook build outputs
+.out
+.storybook-out
+storybook-static
+
+# ===================================
+# ENVIRONMENT & CONFIG
+# ===================================
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+
+# Config files with sensitive data
+config/production.js
+config/staging.js
+.config
+
+# ===================================
+# DATABASE & STORAGE
+# ===================================
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+
+# Database backups
+*.sql.backup
+*.sql.bak
+db_backup/
+database_dumps/
+
+# MongoDB
+mongodb.log
+
+# Redis
+dump.rdb
+
+# ===================================
+# LOGS & TEMPORARY FILES
+# ===================================
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary folders
+tmp/
+temp/
+.tmp/
+
+# ===================================
+# UPLOADS & USER GENERATED CONTENT
+# ===================================
+# File uploads
+uploads/
+public/uploads/
+storage/
+files/
+
+# User generated content
+user_uploads/
+media/
+assets/uploads/
+
+# Image processing temp files
+.image-cache/
+thumbnails/
+
+# ===================================
+# DEVELOPMENT TOOLS
+# ===================================
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+.*.swp
+.*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ===================================
+# TESTING
+# ===================================
+# Test coverage
+coverage/
+.nyc_output/
+.coverage/
+htmlcov/
+
+# Test databases
+test.db
+test.sqlite3
+*.test.db
+
+# Jest
+jest_coverage/
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# ===================================
+# CACHE & TEMPORARY
+# ===================================
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Webpack
+.webpack/
+
+# Next.js
+.next/
+out/
+
+# Nuxt.js
+.nuxt/
+dist/
+
+# Gatsby files
+.cache/
+public/
+
+# Svelte
+.svelte-kit/
+
+# ===================================
+# DEPLOYMENT & CI/CD
+# ===================================
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Serverless
+.serverless/
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify/
+
+# ===================================
+# MACOS & WINDOWS
+# ===================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# ===================================
+# SECURITY & CERTIFICATES
+# ===================================
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+*.cer
+
+# JWT keys
+jwt-key
+jwt-key.pub
+private.key
+public.key
+
+# Auth files
+.htpasswd
+auth.json
+
+# ===================================
+# MONITORING & ANALYTICS
+# ===================================
+# Performance monitoring
+.lighthouse/
+lighthouse-report.html
+
+# Bundle analyzer
+bundle-report.html
+webpack-bundle-analyzer-report.html
+
+# ===================================
+# BACKUP FILES
+# ===================================
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+*.save
+
+# Archive files (if not needed)
+*.tar
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# ===================================
+# PROJECT SPECIFIC
+# ===================================
+# Fruit shop specific files
+fruit-shop.lnk
+
+# Local configuration overrides
+local.config.js
+local.settings.json
+
+# Development database seeded data
+seeds/development/
+test-data/
+
+# API documentation generated files
+api-docs/
+documentation/generated/
+
+# Performance test results
+performance-results/
+load-test-reports/
+
+# Migration backup files
+migrations/backup/
+
+# ===================================
+# OPTIONAL - UNCOMMENT IF NEEDED
+# ===================================
+# Package managers (uncomment based on your choice)
+# package-lock.json  # If using yarn or pnpm
+# yarn.lock          # If using npm or pnpm  
+# pnpm-lock.yaml     # If using npm or yarn
+
+# Editor configs (uncomment if you want to ignore)
+# .editorconfig
+# .prettierrc
+# .eslintrc.json
+
+# Build tools config (uncomment if generated/personal)
+# webpack.config.js
+# vite.config.js
+# rollup.config.js
+
+# Testing configs (uncomment if personal)
+# jest.config.js
+# cypress.json
+# playwright.config.js
+
+# ===================================
+# LOCAL DEVELOPMENT ONLY
+# ===================================
+# Local development overrides
+.local/
+.dev/
+.development/
+
+# Local documentation
+docs/local/
+notes/
+TODO.md
+ROADMAP.md
+
+# Personal scripts
+scripts/personal/
+my-scripts/
+
+# Local experiments
+experiments/
+playground/
+sandbox/

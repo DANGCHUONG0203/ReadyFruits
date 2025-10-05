@@ -1,0 +1,43 @@
+/* ProductEditAdminPage.css */
+
+.product-edit-container {
+  max-width: 600px;
+  margin: 20px auto; /* Centers the container and adds vertical spacing */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-edit-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+.product-edit-form .form-control {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.product-edit-form .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.product-edit-form button.btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+/* Optional: Style for the textarea to have a fixed height and resize handle */
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}

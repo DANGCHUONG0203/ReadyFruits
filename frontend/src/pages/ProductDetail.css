@@ -1,0 +1,369 @@
+/* CSS cho trang chi tiết sản phẩm - tông màu cam */
+.container.my-4 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.2); /* Bóng cam nhạt */
+}
+
+/* Loading */
+.container > div {
+    text-align: center;
+    font-size: 1.2em;
+    color: #e67e22; /* Màu cam */
+    padding: 20px;
+}
+
+
+/* Layout chi tiết sản phẩm */
+.product-detail-page {
+    background: #fff;
+    min-height: 100vh;
+    padding: 32px 0;
+}
+.product-detail-page .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.product-detail-page .breadcrumb {
+    font-size: 1.08rem;
+    color: #ff9800;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+.product-detail-page .breadcrumb a {
+    color: #1976d2;
+    text-decoration: underline;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+.product-detail-page .breadcrumb a:hover {
+    color: #e65100;
+    text-decoration: underline;
+}
+.product-detail-page .breadcrumb span {
+    color: #ff9800;
+    font-weight: 700;
+    margin: 0 2px;
+}
+.product-detail-page .product-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fafbfc;
+    border-radius: 10px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    padding: 8px 8px;
+    margin: 0 auto;
+    max-width: 420px;
+    min-width: 0;
+}
+.product-detail-page .product-info {
+    flex: 1 1 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: transparent;
+    padding: 0 0 0 4px;
+    min-width: 90px;
+    max-width: 150px;
+    box-sizing: border-box;
+}
+.product-detail-page .product-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #e65100;
+    margin-bottom: 4px;
+}
+.product-detail-page .product-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ff9800;
+    margin-bottom: 4px;
+}
+.product-detail-page .product-stock {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+.product-detail-page .product-stock .in-stock {
+    color: #388e3c;
+    font-weight: 600;
+}
+.product-detail-page .product-stock .out-of-stock {
+    color: #d32f2f;
+    font-weight: 600;
+}
+.product-detail-page .product-description {
+    background: #fff3e0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.95rem;
+    color: #5d4037;
+}
+.product-detail-page .product-description h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #e65100;
+}
+.product-detail-page .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 12px;
+}
+.product-detail-page .quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.product-detail-page .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.product-detail-page .quantity-controls button {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    border: none;
+    background: #ffe0b2;
+    color: #e65100;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.product-detail-page .quantity-controls button:disabled {
+    background: #eee;
+    color: #bbb;
+    cursor: not-allowed;
+}
+.product-detail-page .quantity-controls input {
+    width: 48px;
+    text-align: center;
+    font-size: 1.1rem;
+    border: 1px solid #ffcc80;
+    border-radius: 6px;
+    padding: 4px 0;
+    margin: 0 2px;
+}
+.product-detail-page .action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.product-detail-page .add-to-cart-btn {
+    background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(255,152,0,0.06);
+    transition: background 0.2s;
+}
+.product-detail-page .add-to-cart-btn:hover {
+    background: linear-gradient(90deg, #fb8c00 60%, #ffd54f 100%);
+}
+.product-detail-page .btn-outline-primary {
+    background: #fff;
+    color: #ff9800;
+    border: 1.5px solid #ff9800;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.product-detail-page .btn-outline-primary:hover {
+    background: #ff9800;
+    color: #fff;
+}
+.product-detail-page .product-detail-loading,
+.product-detail-page .product-detail-error {
+    text-align: center;
+    padding: 60px 0;
+}
+.product-detail-page .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #ffe0b2;
+    border-top: 5px solid #ff9800;
+    border-radius: 50%;
+    margin: 0 auto 18px auto;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.product-detail-page .product-detail-error h2 {
+    color: #d32f2f;
+    margin-bottom: 12px;
+}
+@media (max-width: 900px) {
+    .product-detail-page .container {
+        align-items: center;
+    }
+    .product-detail-page .product-detail {
+        flex-direction: column;
+        gap: 6px;
+        padding: 4px 2px;
+        max-width: 98vw;
+        margin: 0 auto;
+    }
+    .product-detail-page .product-info {
+        padding: 0;
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+@media (max-width: 600px) {
+    .product-detail-page .container {
+        padding: 0 0.5px;
+        align-items: center;
+    }
+    .product-detail-page .product-detail {
+        padding: 2px 0.5px;
+        gap: 3px;
+        max-width: 100vw;
+        margin: 0 auto;
+    }
+    .product-detail-page .product-info {
+        padding: 0;
+        min-width: 0;
+        max-width: 100%;
+    }
+    .product-detail-page .product-title {
+        font-size: 0.98rem;
+    }
+    .product-detail-page .product-price {
+        font-size: 0.95rem;
+    }
+    .product-detail-page .product-description {
+        font-size: 0.92rem;
+        padding: 5px 5px;
+    }
+    .product-detail-page .add-to-cart-btn, .product-detail-page .btn-outline-primary {
+        padding: 5px 7px;
+        font-size: 0.92rem;
+    }
+}
+
+/* Tiêu đề sản phẩm */
+h2 {
+    color: #d35400; /* Màu cam đậm */
+    font-weight: bold;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+/* Giá sản phẩm */
+.text-success {
+    color: #e67e22 !important; /* Cam thay vì xanh mặc định */
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Mô tả sản phẩm */
+p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Số lượng tồn kho */
+p:last-of-type {
+    font-size: 1em;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Nút thêm vào giỏ */
+.btn.btn-success {
+    background-color: #e67e22; /* Cam chủ đạo */
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn.btn-success:hover {
+    background-color: #d35400; /* Cam đậm hơn khi hover */
+    transform: translateY(-2px);
+}
+
+.btn.btn-success:disabled {
+    background-color: #b0bec5; /* Xám nhạt khi hết hàng */
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .col-md-5,
+    .col-md-7 {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 20px;
+    }
+
+    .img-fluid {
+        max-height: 300px;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .text-success {
+        font-size: 1.3em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    p:last-of-type {
+        font-size: 0.9em;
+    }
+
+    .btn.btn-success {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container.my-4 {
+        padding: 15px;
+    }
+
+    .img-fluid {
+        max-height: 250px;
+    }
+}
