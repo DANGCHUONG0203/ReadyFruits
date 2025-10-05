@@ -191,7 +191,6 @@ dist/
 
 # Gatsby files
 .cache/
-public/
 
 # Svelte
 .svelte-kit/
