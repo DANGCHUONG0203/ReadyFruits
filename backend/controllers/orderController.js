@@ -28,51 +28,88 @@ const emailService = require('../utils/emailService');
 
 exports.createOrder = async (req, res, next) => {
   try {
-    console.log('req.user:', req.user); // Log user info for debugging
-    const user_id = req.user.user_id;
-    const { items, shipping_address } = req.body; // items = [{ product_id, quantity, price }]
-    
-    // Lấy customer_id từ user_id
-    const [cusRows] = await pool.query('SELECT customer_id FROM customers WHERE user_id = ?', [user_id]);
-    if (!cusRows.length) {
-      return res.status(400).json({ message: 'Không tìm thấy thông tin khách hàng' });
+    const { items, shipping_address, customer_info } = req.body; // customer_info: { full_name, phone, email, address, notes }
+    let customer_id = null;
+    let customer_name = '';
+    let customer_email = '';
+    let customer_phone = '';
+
+    if (req.user && typeof req.user === 'object' && req.user.user_id) {
+      // Đã đăng nhập
+      const user_id = req.user.user_id;
+      const [cusRows] = await pool.query('SELECT customer_id, name, email, phone FROM customers WHERE user_id = ?', [user_id]);
+      if (!cusRows.length) {
+        return res.status(400).json({ message: 'Không tìm thấy thông tin khách hàng' });
+      }
+      customer_id = cusRows[0].customer_id;
+      customer_name = cusRows[0].name;
+      customer_email = cusRows[0].email;
+      customer_phone = cusRows[0].phone;
+    } else {
+      // Khách chưa đăng nhập: tìm theo email, nếu chưa có thì tạo mới
+      if (!customer_info || typeof customer_info !== 'object' || !customer_info.email) {
+        return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin khách hàng' });
+      }
+      const [cusRows] = await pool.query('SELECT customer_id, name, email, phone FROM customers WHERE email = ?', [customer_info.email]);
+      if (cusRows.length) {
+        customer_id = cusRows[0].customer_id;
+        customer_name = cusRows[0].name;
+        customer_email = cusRows[0].email;
+        customer_phone = cusRows[0].phone;
+      } else {
+        // Tạo mới customer
+        const [result] = await pool.query(
+          'INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)',
+          [customer_info.full_name, customer_info.email, customer_info.phone, customer_info.address]
+        );
+        customer_id = result.insertId;
+        customer_name = customer_info.full_name;
+        customer_email = customer_info.email;
+        customer_phone = customer_info.phone;
+      }
     }
-    const customer_id = cusRows[0].customer_id;
 
     // Tính tổng tiền
     const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    // Tạo order
+
+    // Tạo order với đầy đủ thông tin giao hàng
+    // Lưu số điện thoại người nhận riêng (nếu có)
     const [orderResult] = await pool.query(
-      'INSERT INTO orders (customer_id, total, status) VALUES (?, ?, ?)', 
-      [customer_id, total, 'pending']
+      'INSERT INTO orders (customer_id, total, status, receiver_name, receiver_phone, delivery_time, shipping_address) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [
+        customer_id,
+        total,
+        'pending',
+        customer_info.receiver_name || customer_name,
+        customer_info.receiver_phone || customer_info.phone || customer_phone,
+        customer_info.delivery_time || null,
+        customer_info.address || null
+      ]
     );
     const orderId = orderResult.insertId;
 
     // Thêm order items và cập nhật stock
     for (const item of items) {
       await pool.query(
-        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)', 
+        'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)',
         [orderId, item.product_id, item.quantity, item.price]
       );
-      
-      // Giảm stock sản phẩm
       await pool.query(
-        'UPDATE products SET stock = GREATEST(stock - ?, 0) WHERE product_id = ?', 
+        'UPDATE products SET stock = GREATEST(stock - ?, 0) WHERE product_id = ?',
         [item.quantity, item.product_id]
       );
     }
 
     // Lấy thông tin chi tiết đơn hàng để gửi email
     const [orderDetails] = await pool.query(`
-  SELECT o.*, u.email, u.username as customer_name, c.phone,
-             GROUP_CONCAT(
-               CONCAT('{"name":"', p.name, '","quantity":', oi.quantity, ',"price":', oi.price, '}')
-               SEPARATOR ','
-             ) as items_json
-      FROM orders o 
+      SELECT o.*, c.email, c.name as customer_name, c.phone,
+        o.receiver_name, o.receiver_phone, o.delivery_time, o.shipping_address,
+        GROUP_CONCAT(
+          CONCAT('{"name":"', p.name, '","quantity":', oi.quantity, ',"price":', oi.price, '}')
+          SEPARATOR ','
+        ) as items_json
+      FROM orders o
       JOIN customers c ON o.customer_id = c.customer_id
-      JOIN users u ON c.user_id = u.user_id
       JOIN order_items oi ON o.order_id = oi.order_id
       JOIN products p ON oi.product_id = p.product_id
       WHERE o.order_id = ?
@@ -88,7 +125,10 @@ exports.createOrder = async (req, res, next) => {
         customer_name: order.customer_name,
         phone: order.phone,
         email: order.email,
-        address: shipping_address,
+        address: order.shipping_address || '',
+        receiver_name: order.receiver_name || order.customer_name || '',
+        receiver_phone: order.receiver_phone || order.phone,
+        delivery_time: order.delivery_time || '',
         items: JSON.parse(`[${order.items_json}]`)
       };
 
@@ -110,21 +150,21 @@ exports.createOrder = async (req, res, next) => {
     }
 
     res.json({ message: 'Đặt hàng thành công', order_id: orderId });
-  } catch (err) { 
-    next(err); 
+  } catch (err) {
+    next(err);
   }
 };
 
 exports.getUserOrders = async (req, res, next) => {
   try {
+    if (!req.user || !req.user.user_id) {
+      return res.status(401).json({ message: 'Bạn chưa đăng nhập' });
+    }
     const user_id = req.user.user_id;
-    
     // Lấy customer_id từ user_id
     const [cusRows] = await pool.query('SELECT customer_id FROM customers WHERE user_id = ?', [user_id]);
     if (!cusRows.length) return res.json([]);
-    
     const customer_id = cusRows[0].customer_id;
-    
     // Lấy orders với thông tin chi tiết
     const [orders] = await pool.query(`
       SELECT o.*, 
@@ -136,7 +176,6 @@ exports.getUserOrders = async (req, res, next) => {
       GROUP BY o.order_id
       ORDER BY o.order_date DESC
     `, [customer_id]);
-    
     res.json(orders);
   } catch (err) { 
     next(err); 

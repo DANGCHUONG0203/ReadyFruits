@@ -51,6 +51,7 @@ class EmailService {
   }
 
   // Template email thông báo cho admin
+
   generateOrderNotificationTemplate(orderData) {
     const items = orderData.items.map(item => 
       `<tr>
@@ -78,16 +79,37 @@ class EmailService {
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
           <h3 style="margin-top: 0; color: #ff6b35;">📋 Thông tin đơn hàng</h3>
           <p><strong>Mã đơn hàng:</strong> #${orderData.order_id}</p>
-          <p><strong>Thời gian:</strong> ${new Date(orderData.created_at).toLocaleString('vi-VN')}</p>
+          <p><strong>Thời gian:</strong> ${this.formatVietnamTime(orderData.created_at)}</p>
           <p><strong>Tổng tiền:</strong> <span style="color: #ff6b35; font-weight: bold; font-size: 18px;">${this.formatPrice(orderData.total_amount)}</span></p>
         </div>
 
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
           <h3 style="margin-top: 0; color: #ff6b35;">👤 Thông tin khách hàng</h3>
-          <p><strong>Họ tên:</strong> ${orderData.customer_name}</p>
+          <p><strong>Họ tên đặt hàng:</strong> ${orderData.customer_name}</p>
           <p><strong>Số điện thoại:</strong> <a href="tel:${orderData.phone}" style="color: #ff6b35;">${orderData.phone}</a></p>
           <p><strong>Email:</strong> <a href="mailto:${orderData.email}" style="color: #ff6b35;">${orderData.email}</a></p>
-          <p><strong>Địa chỉ:</strong> ${orderData.address}</p>
+          <p><strong>Địa chỉ nhận hàng:</strong> ${orderData.address || '(Không nhập)'}</p>
+          <p><strong>Người nhận hàng:</strong> ${orderData.receiver_name || '(Trùng người đặt)'}</p>
+          <p><strong>SĐT người nhận:</strong> <a href="tel:${orderData.receiver_phone || orderData.phone}" style="color: #ff6b35;">${orderData.receiver_phone || orderData.phone || '(Không nhập)'}</a></p>
+          <p><strong>Ngày giờ nhận hàng:</strong> ${orderData.delivery_time ? this.formatVietnamTime(orderData.delivery_time) : '(Không chọn)'}</p>
+  // Format date string to Vietnam timezone (Asia/Ho_Chi_Minh)
+  formatVietnamTime(dateInput) {
+    if (!dateInput) return '';
+    try {
+      let date = dateInput;
+      if (typeof dateInput === 'string' && dateInput.includes('T')) {
+        date = new Date(dateInput + (dateInput.endsWith('Z') ? '' : 'Z'));
+        date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
+      } else {
+        date = new Date(dateInput);
+      }
+      // Format: dd/MM/yyyy HH:mm (24h, không SA/CH)
+      const pad = n => n.toString().padStart(2, '0');
+      return pad(date.getDate()) + '/' + pad(date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+    } catch (e) {
+      return dateInput;
+    }
+  }
         </div>
 
         <div style="margin-bottom: 20px;">

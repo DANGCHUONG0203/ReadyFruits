@@ -88,7 +88,7 @@ function Footer() {
                   </div>
           </div>
                  <a
-                   href="https://zalo.me/0982275538"
+                   href="https://zalo.me/0979347931"
                    className="contact-cta"
                    target="_blank"
                    rel="noopener noreferrer"

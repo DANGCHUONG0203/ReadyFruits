@@ -16,10 +16,6 @@ export default function CartPage() {
   };
 
   const handleCheckout = () => {
-    if (!user) {
-      navigate('/login', { state: { from: '/cart' } });
-      return;
-    }
     navigate('/checkout');
   };
 
@@ -138,7 +134,7 @@ export default function CartPage() {
                   className="checkout-btn"
                   onClick={handleCheckout}
                 >
-                  {!user ? 'Đăng nhập để thanh toán' : 'Tiến hành thanh toán'}
+                  Thanh toán
                 </button>
                 
                 <button 

@@ -31,10 +31,10 @@ export default function ProductDetailView({
           <div className="product-images">
             <div className="main-image">
               <img 
-                src={productImages[selectedImage] || '/api/placeholder/400/400'} 
+                src={productImages[selectedImage] || '/api/placeholder/300/400'} 
                 alt={`Hình ảnh sản phẩm ${product.name} - FruitShop`}
                 onError={(e) => {
-                  e.target.src = '/api/placeholder/400/400';
+                  e.target.src = '/api/placeholder/300/300';
                 }}
               />
             </div>

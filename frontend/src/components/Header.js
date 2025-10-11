@@ -36,7 +36,7 @@ export default function Header() {
         {/* Phone */}
         <div className="header-phone">
           <span className="phone-icon">☎️</span>
-          <a href="https://zalo.me/0977045133" target="_blank" rel="noopener noreferrer" className="phone-number">0977045133</a>
+          <a href="https://zalo.me/0979347931" target="_blank" rel="noopener noreferrer" className="phone-number">0979347931</a>
         </div>
         {/* Mobile Menu Button */}
         <button className={`mobile-menu-btn ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu} aria-label="Toggle menu">
