@@ -25,6 +25,7 @@ exports.getStats = async (req, res, next) => {
 // backend/controllers/orderController.js
 const pool = require('../config/db');
 const emailService = require('../utils/emailService');
+const { sendOrderNotificationToZalo } = require('../utils/zaloService');
 
 exports.createOrder = async (req, res, next) => {
   try {
@@ -136,6 +137,8 @@ exports.createOrder = async (req, res, next) => {
       try {
         await emailService.sendNewOrderNotification(orderData);
         console.log('Admin notification email sent successfully');
+        // Gửi thông báo về Zalo OA admin
+        sendOrderNotificationToZalo(orderData);
       } catch (emailError) {
         console.error('Failed to send admin notification:', emailError);
       }

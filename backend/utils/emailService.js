@@ -2,6 +2,24 @@
 const nodemailer = require('nodemailer');
 
 class EmailService {
+  // Format date string to Vietnam timezone (Asia/Ho_Chi_Minh)
+  static formatVietnamTime(dateInput) {
+    if (!dateInput) return '';
+    try {
+      let date = dateInput;
+      if (typeof dateInput === 'string' && dateInput.includes('T')) {
+        date = new Date(dateInput + (dateInput.endsWith('Z') ? '' : 'Z'));
+        date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
+      } else {
+        date = new Date(dateInput);
+      }
+      // Format: dd/MM/yyyy HH:mm (24h, không SA/CH)
+      const pad = n => n.toString().padStart(2, '0');
+      return pad(date.getDate()) + '/' + pad(date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+    } catch (e) {
+      return dateInput;
+    }
+  }
   constructor() {
    this.transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -79,7 +97,7 @@ class EmailService {
         <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
           <h3 style="margin-top: 0; color: #ff6b35;">📋 Thông tin đơn hàng</h3>
           <p><strong>Mã đơn hàng:</strong> #${orderData.order_id}</p>
-          <p><strong>Thời gian:</strong> ${this.formatVietnamTime(orderData.created_at)}</p>
+          <p><strong>Thời gian:</strong> ${EmailService.formatVietnamTime(orderData.created_at)}</p>
           <p><strong>Tổng tiền:</strong> <span style="color: #ff6b35; font-weight: bold; font-size: 18px;">${this.formatPrice(orderData.total_amount)}</span></p>
         </div>
 
@@ -91,25 +109,7 @@ class EmailService {
           <p><strong>Địa chỉ nhận hàng:</strong> ${orderData.address || '(Không nhập)'}</p>
           <p><strong>Người nhận hàng:</strong> ${orderData.receiver_name || '(Trùng người đặt)'}</p>
           <p><strong>SĐT người nhận:</strong> <a href="tel:${orderData.receiver_phone || orderData.phone}" style="color: #ff6b35;">${orderData.receiver_phone || orderData.phone || '(Không nhập)'}</a></p>
-          <p><strong>Ngày giờ nhận hàng:</strong> ${orderData.delivery_time ? this.formatVietnamTime(orderData.delivery_time) : '(Không chọn)'}</p>
-  // Format date string to Vietnam timezone (Asia/Ho_Chi_Minh)
-  formatVietnamTime(dateInput) {
-    if (!dateInput) return '';
-    try {
-      let date = dateInput;
-      if (typeof dateInput === 'string' && dateInput.includes('T')) {
-        date = new Date(dateInput + (dateInput.endsWith('Z') ? '' : 'Z'));
-        date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
-      } else {
-        date = new Date(dateInput);
-      }
-      // Format: dd/MM/yyyy HH:mm (24h, không SA/CH)
-      const pad = n => n.toString().padStart(2, '0');
-      return pad(date.getDate()) + '/' + pad(date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
-    } catch (e) {
-      return dateInput;
-    }
-  }
+          <p><strong>Ngày giờ nhận hàng:</strong> ${orderData.delivery_time ? EmailService.formatVietnamTime(orderData.delivery_time) : '(Không chọn)'}</p>
         </div>
 
         <div style="margin-bottom: 20px;">

@@ -37,7 +37,7 @@ export default function HomePage() {
     return (
       <div className="homepage-products-grid">
         {products.map(product => (
-          <ProductCard key={product.product_id || product._id} product={product} />
+          <ProductCard key={product._id} product={product} />
         ))}
       </div>
     );

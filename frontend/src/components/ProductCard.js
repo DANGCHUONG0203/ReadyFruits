@@ -12,8 +12,17 @@ export default function ProductCard({ product }) {
     addToCart(product, 1);
   };
 
-  // Placeholder image nếu không có ảnh
-  const imageUrl = product.image_url || '/placeholder.svg';
+  // Chuẩn hóa đường dẫn ảnh (nếu là đường dẫn tương đối thì thêm domain backend)
+  const normalizeImageUrl = (raw) => {
+    if (!raw) return '/placeholder.svg';
+    let url = String(raw).trim();
+    if (/^https?:\/\//i.test(url)) return url;
+    if (url.startsWith('/uploads/')) {
+      return (process.env.REACT_APP_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000') + url;
+    }
+    return url;
+  };
+  const imageUrl = normalizeImageUrl(product.image_url) || '/placeholder.svg';
   
   // Hiển thị trạng thái stock
   const getStockStatus = (stock) => {

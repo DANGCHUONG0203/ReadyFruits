@@ -5,6 +5,17 @@ import formatPrice from '../utils/formatPrice';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 
+// Đảm bảo ảnh luôn đúng domain/backend
+function normalizeImageUrl(raw) {
+  if (!raw) return '/placeholder.svg';
+  let url = String(raw).trim();
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith('/uploads/')) {
+    return (process.env.REACT_APP_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000') + url;
+  }
+  return url;
+}
+
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } = useContext(CartContext);
   const { user } = useAuth();
@@ -52,9 +63,11 @@ export default function CartPage() {
             {cart.map(item => (
               <div key={item.product_id} className="cart-item">
                 <div className="item-image">
-                  <img 
-                    src={item.image || `/api/placeholder/80/80`} 
+                  <img
+                    src={normalizeImageUrl(item.image_url || item.image) || `/api/placeholder/80/80`}
                     alt={item.name}
+                    style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8 }}
+                    onError={e => { e.target.src = '/api/placeholder/80/80'; }}
                   />
                 </div>
                 

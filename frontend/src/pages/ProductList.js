@@ -7,12 +7,44 @@ import Pagination from '../components/Pagination';
 import './ProductList.css';
 
 export default function ProductList() {
+  // Sub-categories cho Giỏ trái cây
+  const fruitBasketTypes = [
+    { value: '', label: 'Tất cả nhóm nhỏ' },
+    { value: 'vieng', label: 'Giỏ trái cây viếng' },
+    { value: 'sinh-nhat', label: 'Giỏ trái cây sinh nhật' },
+    { value: 'tan-gia', label: 'Giỏ trái cây tân gia' },
+    { value: 'cuoi-hoi', label: 'Giỏ trái cây cưới hỏi' },
+  ];
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
+  const [selectedType, setSelectedType] = useState(searchParams.get('type') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'name');
+  
+  // mapping từ tên sub-category sang type value
+  const subCategoryNameToType = {
+    'giỏ trái cây viếng': 'vieng',
+    'giỏ trái cây sinh nhật': 'sinh-nhat',
+    'giỏ trái cây tân gia': 'tan-gia',
+    'giỏ trái cây cưới hỏi': 'cuoi-hoi',
+    'kệ hoa chúc mừng': 'ke-chuc-mung',
+    'kệ hoa kính viếng': 'ke-kinh-vieng',
+    'bó hoa chúc mừng': 'bo-chuc-mung',
+    'bó hoa kính viếng': 'bo-kinh-vieng',
+  };
+
+  // Khi searchParams thay đổi (ví dụ click từ menu), cập nhật selectedCategory và selectedType
+  useEffect(() => {
+    const urlCategory = searchParams.get('category') || '';
+    setSelectedCategory(urlCategory);
+    const urlType = searchParams.get('type') || '';
+    setSelectedType(urlType);
+  }, [searchParams]);
 
   const debouncedSearch = useDebounce(searchTerm, 500);
+
+  // Lấy page từ URL param (mặc định 1)
+  const urlPage = parseInt(searchParams.get('page') || '1', 10);
 
   const {
     products,
@@ -23,11 +55,12 @@ export default function ProductList() {
     totalPages,
     handleSearch,
     handleCategoryFilter,
+    handleTypeFilter,
     handleSort,
     goToPage,
     filteredCount,
     totalCount
-  } = useProducts();
+  } = useProducts({ initialPage: urlPage });
 
   // Get categories - temporary mock data
   const categories = [
@@ -43,9 +76,10 @@ export default function ProductList() {
     if (selectedCategory) params.set('category', selectedCategory);
     if (sortBy !== 'name') params.set('sort', sortBy);
     if (currentPage !== 1) params.set('page', currentPage.toString());
+    if (selectedType) params.set('type', selectedType);
     
     setSearchParams(params);
-  }, [debouncedSearch, selectedCategory, sortBy, currentPage, setSearchParams]);
+  }, [debouncedSearch, selectedCategory, sortBy, currentPage, selectedType, setSearchParams]);
 
   // Apply filters when they change
   useEffect(() => {
@@ -57,16 +91,48 @@ export default function ProductList() {
   }, [selectedCategory, handleCategoryFilter]);
 
   useEffect(() => {
+    handleTypeFilter(selectedType);
+  }, [selectedType, handleTypeFilter]);
+
+  useEffect(() => {
     handleSort(sortBy, 'asc');
   }, [sortBy, handleSort]);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    goToPage(1); // Reset to first page on new search
+    const value = e.target.value;
+    setSearchTerm(value);
+    // Nếu người dùng gõ đúng tên sub-category, tự động chọn type tương ứng
+    const lower = value.trim().toLowerCase();
+    if (subCategoryNameToType[lower]) {
+      setSelectedCategory('1'); // ví dụ: Giỏ trái cây
+      setSelectedType(subCategoryNameToType[lower]);
+      // cập nhật URL params
+      const params = new URLSearchParams(searchParams);
+      params.set('category', '1');
+      params.set('type', subCategoryNameToType[lower]);
+      setSearchParams(params);
+    }
+    goToPage(1);
   };
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
+    // Nếu đổi danh mục, reset type về ''
+    setSelectedType('');
+    goToPage(1);
+  };
+
+  // Khi chọn type (sub-category), cập nhật URL params để đồng bộ với menu header
+  const handleTypeChange = (e) => {
+    const value = e.target.value;
+    setSelectedType(value);
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set('type', value);
+    } else {
+      params.delete('type');
+    }
+    setSearchParams(params);
     goToPage(1);
   };
 
@@ -83,21 +149,40 @@ export default function ProductList() {
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCategory('');
+    setSelectedType('');
     setSortBy('name');
     goToPage(1);
   };
 
   const hasActiveFilters = searchTerm || selectedCategory || sortBy !== 'name';
 
+  // Lọc theo type nếu có (chỉ lọc khi có type, không hiển thị tất cả nếu type không khớp)
+  let filteredProductsByType = products;
+  // Nếu searchTerm trùng tên sub-category, chỉ hiển thị sản phẩm nhóm nhỏ đó
+  const lowerSearch = searchTerm.trim().toLowerCase();
+  if (subCategoryNameToType[lowerSearch]) {
+    filteredProductsByType = products.filter(product => product.type === subCategoryNameToType[lowerSearch]);
+  }
+
+  // Tiêu đề động cho type
+  const typeTitles = {
+    'vieng': 'Giỏ trái cây viếng',
+    'sinh-nhat': 'Giỏ trái cây sinh nhật',
+    'tan-gia': 'Giỏ trái cây tân gia',
+    'cuoi-hoi': 'Giỏ trái cây cưới hỏi',
+    'ke-chuc-mung': 'Kệ hoa chúc mừng',
+    'ke-kinh-vieng': 'Kệ hoa kính viếng',
+    'bo-chuc-mung': 'Bó hoa chúc mừng',
+    'bo-kinh-vieng': 'Bó hoa kính viếng',
+  };
+  const dynamicTitle = selectedType && typeTitles[selectedType] ? typeTitles[selectedType] : null;
+
   return (
     <div className="product-list-page">
       <div className="container">
         {/* Header */}
         <div className="page-header">
-          <h1>Tất cả sản phẩm</h1>
-          <p className="page-subtitle">
-            Khám phá bộ sưu tập trái cây tươi ngon, chất lượng cao
-          </p>
+          <h1>{dynamicTitle || 'Tất cả sản phẩm'}</h1>
         </div>
 
         {/* Search and Filters */}
@@ -132,6 +217,22 @@ export default function ProductList() {
                 ))}
               </select>
             </div>
+            {/* Hiện filter sub-category nếu chọn Giỏ trái cây */}
+            {selectedCategory === '1' && (
+              <div className="filter-group">
+                <label htmlFor="type-filter">Nhóm nhỏ:</label>
+                <select
+                  id="type-filter"
+                  value={selectedType}
+                  onChange={handleTypeChange}
+                  className="filter-select"
+                >
+                  {fruitBasketTypes.map(type => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="filter-group">
               <label htmlFor="sort-filter">Sắp xếp:</label>
@@ -169,8 +270,8 @@ export default function ProductList() {
               'Đang tải...'
             ) : (
               <>
-                Hiển thị <strong>{products.length}</strong> 
-                {totalCount > products.length && ` trong ${totalCount}`} sản phẩm
+                Hiển thị <strong>{filteredProductsByType.length}</strong> 
+                {totalCount > filteredProductsByType.length && ` trong ${totalCount}`} sản phẩm
                 {hasActiveFilters && (
                   <span className="filter-indicator">
                     {searchTerm && ` với từ khóa "${searchTerm}"`}
@@ -210,7 +311,7 @@ export default function ProductList() {
                 Thử lại
               </button>
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProductsByType.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">🔍</div>
               <h3>
@@ -234,7 +335,7 @@ export default function ProductList() {
           ) : (
             <>
               <div className="products-grid">
-                {(products || []).map(product => (
+                {(filteredProductsByType || []).map(product => (
                   <ProductCard 
                     key={product.product_id} 
                     product={product}

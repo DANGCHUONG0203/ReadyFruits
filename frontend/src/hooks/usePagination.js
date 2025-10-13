@@ -6,8 +6,8 @@ import { useState, useMemo } from 'react';
  * @param {Array} data - Array of data to paginate
  * @param {number} itemsPerPage - Number of items per page
  */
-const usePagination = (data, itemsPerPage = 10) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const usePagination = (data, itemsPerPage = 10, initialPage = 1) => {
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   // Calculate total pages
   const totalPages = useMemo(() => {
@@ -82,7 +82,7 @@ const usePagination = (data, itemsPerPage = 10) => {
     previousPage,
     goToFirstPage,
     goToLastPage,
-    resetPagination
+    setCurrentPage
   };
 };
 

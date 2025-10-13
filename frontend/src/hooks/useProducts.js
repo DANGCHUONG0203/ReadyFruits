@@ -8,9 +8,10 @@ import usePagination from './usePagination';
 /**
  * Custom hook for managing products with search, filter, and pagination
  */
-const useProducts = () => {
+const useProducts = ({ initialPage = 1 } = {}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
   const [sortBy, setSortBy] = useState('name'); // 'name', 'price', 'created_at'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc', 'desc'
   
@@ -54,6 +55,11 @@ const useProducts = () => {
       );
     }
 
+    // Apply type filter (e.g., 'vieng', 'sinh-nhat', 'ke-chuc-mung')
+    if (typeFilter) {
+      filtered = filtered.filter(product => String(product.type || '').toLowerCase() === String(typeFilter).toLowerCase());
+    }
+
     // Apply sorting
     filtered.sort((a, b) => {
       let aValue = a[sortBy];
@@ -79,7 +85,7 @@ const useProducts = () => {
     });
 
     return filtered;
-  }, [allProducts, debouncedSearchTerm, categoryFilter, sortBy, sortOrder]);
+  }, [allProducts, debouncedSearchTerm, categoryFilter, typeFilter, sortBy, sortOrder]);
 
   const processedProducts = filteredProducts();
 
@@ -92,13 +98,13 @@ const useProducts = () => {
     goToPage,
     nextPage,
     previousPage,
-    resetPagination
-  } = usePagination(processedProducts, 12); // 12 products per page
+    setCurrentPage
+  } = usePagination(processedProducts, 12, initialPage); // 12 products per page
 
-  // Reset pagination when filters change
+  // Reset về trang 1 khi filter/search/sort đổi, nhưng KHÔNG reset khi chỉ đổi page
   useEffect(() => {
-    resetPagination();
-  }, [debouncedSearchTerm, categoryFilter, sortBy, sortOrder, resetPagination]);
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, categoryFilter, typeFilter, sortBy, sortOrder]);
 
   // Search and filter functions
   const handleSearch = (term) => {
@@ -107,6 +113,10 @@ const useProducts = () => {
 
   const handleCategoryFilter = (categoryId) => {
     setCategoryFilter(categoryId);
+  };
+
+  const handleTypeFilter = (type) => {
+    setTypeFilter(type);
   };
 
   const handleSort = (field, order = 'asc') => {
@@ -136,10 +146,12 @@ const useProducts = () => {
     // Search & Filter
     searchTerm,
     categoryFilter,
+  typeFilter,
     sortBy,
     sortOrder,
     handleSearch,
     handleCategoryFilter,
+  handleTypeFilter,
     handleSort,
     clearFilters,
     

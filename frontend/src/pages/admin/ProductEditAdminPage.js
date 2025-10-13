@@ -7,10 +7,26 @@ import './ProductAdmin.css';
 const ProductEditAdminPage = () => {
   const { id } = useParams();
   const isEdit = Boolean(id && id !== 'new');
+  // Các nhóm nhỏ (sub-category/type) cho sản phẩm
+  const fruitBasketTypes = [
+    { value: '', label: 'Không chọn nhóm nhỏ' },
+    // Giỏ trái cây
+    { value: 'vieng', label: 'Giỏ trái cây viếng' },
+    { value: 'sinh-nhat', label: 'Giỏ trái cây sinh nhật' },
+    { value: 'tan-gia', label: 'Giỏ trái cây tân gia' },
+    { value: 'cuoi-hoi', label: 'Giỏ trái cây cưới hỏi' },
+    // Kệ hoa
+    { value: 'ke-chuc-mung', label: 'Kệ hoa chúc mừng' },
+    { value: 'ke-kinh-vieng', label: 'Kệ hoa kính viếng' },
+    // Bó hoa
+    { value: 'bo-chuc-mung', label: 'Bó hoa chúc mừng' },
+    { value: 'bo-kinh-vieng', label: 'Bó hoa kính viếng' },
+  ];
   const [form, setForm] = useState({
     name: '',
     price: '',
     category_id: '',
+    type: '', // thêm trường type (sub-category)
     supplier_id: '1', // mặc định 1
     stock: '100', // mặc định 100
     description: '',
@@ -30,6 +46,7 @@ const ProductEditAdminPage = () => {
             name: data.name || '',
             price: data.price || '',
             category_id: data.category_id || '',
+            type: data.type || '',
             supplier_id: data.supplier_id ? String(data.supplier_id) : '1',
             stock: data.stock ? String(data.stock) : '100',
             description: data.description || '',
@@ -75,6 +92,7 @@ const ProductEditAdminPage = () => {
       ...form,
       price: Number(form.price) || 0,
       category_id: Number(form.category_id) || 1,
+      type: form.type || '',
       supplier_id: Number(form.supplier_id) || 1,
       stock: Number(form.stock) || 0,
       image_url: form.image_url,
@@ -109,6 +127,15 @@ const ProductEditAdminPage = () => {
         <div className="form-group">
           <label>Danh mục ID:</label>
           <input type="number" name="category_id" value={form.category_id} onChange={handleChange} required min={1} />
+        </div>
+        {/* Nhóm nhỏ (sub-category/type) */}
+        <div className="form-group">
+          <label>Nhóm nhỏ (sub-category):</label>
+          <select name="type" value={form.type} onChange={handleChange} className="filter-select">
+            {fruitBasketTypes.map(type => (
+              <option key={type.value} value={type.value}>{type.label}</option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label>Nhà cung cấp ID:</label>

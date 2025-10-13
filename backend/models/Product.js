@@ -3,7 +3,7 @@ const db = require("../config/db");
 const Product = {
   getAll: async () => {
     const [rows] = await db.query(`
-      SELECT p.*, c.name as category_name, s.name as supplier_name 
+      SELECT p.*, p.image_url, c.name as category_name, s.name as supplier_name 
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.category_id 
       LEFT JOIN suppliers s ON p.supplier_id = s.supplier_id
@@ -14,7 +14,7 @@ const Product = {
 
   getById: async (id) => {
     const [rows] = await db.query(`
-      SELECT p.*, c.name as category_name, s.name as supplier_name 
+      SELECT p.*, p.image_url, c.name as category_name, s.name as supplier_name 
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.category_id 
       LEFT JOIN suppliers s ON p.supplier_id = s.supplier_id

@@ -33,6 +33,14 @@ function Pagination({
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
+  // Helper: chuyển trang và scroll lên đầu
+  const handlePageClick = (page) => {
+    if (page !== currentPage) {
+      onPageChange(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   if (totalPages <= 1) {
     return null; // Không hiển thị pagination nếu chỉ có 1 trang
   }
@@ -50,7 +58,7 @@ function Pagination({
         {/* Nút Previous */}
         <button
           className={`pagination-button pagination-nav ${currentPage === 1 ? 'disabled' : ''}`}
-          onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+          onClick={() => currentPage > 1 && handlePageClick(currentPage - 1)}
           disabled={currentPage === 1}
           aria-label="Trang trước"
         >
@@ -62,7 +70,7 @@ function Pagination({
           <>
             <button
               className="pagination-button"
-              onClick={() => onPageChange(1)}
+              onClick={() => handlePageClick(1)}
             >
               1
             </button>
@@ -77,7 +85,7 @@ function Pagination({
           <button
             key={page}
             className={`pagination-button ${page === currentPage ? 'active' : ''}`}
-            onClick={() => onPageChange(page)}
+            onClick={() => handlePageClick(page)}
             aria-label={`Trang ${page}`}
             aria-current={page === currentPage ? 'page' : undefined}
           >
@@ -93,7 +101,7 @@ function Pagination({
             )}
             <button
               className="pagination-button"
-              onClick={() => onPageChange(totalPages)}
+              onClick={() => handlePageClick(totalPages)}
             >
               {totalPages}
             </button>
@@ -103,7 +111,7 @@ function Pagination({
         {/* Nút Next */}
         <button
           className={`pagination-button pagination-nav ${currentPage === totalPages ? 'disabled' : ''}`}
-          onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+          onClick={() => currentPage < totalPages && handlePageClick(currentPage + 1)}
           disabled={currentPage === totalPages}
           aria-label="Trang tiếp"
         >
@@ -125,7 +133,7 @@ function Pagination({
               if (e.key === 'Enter') {
                 const page = parseInt(e.target.value);
                 if (page >= 1 && page <= totalPages && page !== currentPage) {
-                  onPageChange(page);
+                  handlePageClick(page);
                   e.target.value = '';
                 }
               }
